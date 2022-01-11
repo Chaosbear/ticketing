@@ -1,11 +1,9 @@
 name: tests-tickets
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
-  workflow_dispatch:
+    paths:
+      - 'tickets/**'
 
 jobs:
   build:
