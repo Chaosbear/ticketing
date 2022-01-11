@@ -1,26 +1,27 @@
-name: deploy-auth
+name: deploy-orders
 
 on:
   push:
     branches:
       - master
     paths:
-      - 'auth/**'
+      - 'orders/**'
       
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd auth && docker build -t chaosbear/ticketing-auth .
+      - run: cd orders && docker build -t chaosbear/ticketing-orders .
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker push chaosbear/ticketing-auth
+      - run: docker push chaosbear/ticketing-orders
       - uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       # clustername on digital ocean = ticketing
       - run: doctl kubernetes cluster kebeconfig save ticketing
-      - run: kubectl rollout restart deployment auth-depl
+      - run: kubectl rollout restart deployment orders-depl
+      
